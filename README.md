@@ -1,3 +1,3 @@
-Бэкенд для клона сайта TJournal. Результат прохождения вебинара - https://www.youtube.com/watch?v=N-ARnRRogA0
+Бэкенд новостного сайта. Результат прохождения вебинара - https://www.youtube.com/watch?v=N-ARnRRogA0
 
 ... работа в процессе ...
