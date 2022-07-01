@@ -1,9 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { PostService } from './post.service';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpException,
+  HttpStatus,
+} from "@nestjs/common";
+import { PostService } from "./post.service";
+import { CreatePostDto } from "./dto/create-post.dto";
+import { UpdatePostDto } from "./dto/update-post.dto";
 
-@Controller('post')
+@Controller("post")
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
@@ -17,18 +27,36 @@ export class PostController {
     return this.postService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postService.findOne(+id);
+  @Get(":id")
+  async findOne(@Param("id") id: string) {
+    const post = await this.postService.findOne(+id);
+
+    if (!post) {
+      throw new HttpException("Статья не найдена!", HttpStatus.NOT_FOUND);
+    }
+
+    return post;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(+id, updatePostDto);
+  @Patch(":id")
+  async update(@Param("id") id: string, @Body() updatePostDto: UpdatePostDto) {
+    const editedPost = await this.postService.update(+id, updatePostDto);
+
+    if (editedPost.affected === 0) {
+      throw new HttpException("Статья не найдена!", HttpStatus.NOT_FOUND);
+    }
+
+    return editedPost;
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postService.remove(+id);
+  @Delete(":id")
+  async remove(@Param("id") id: string) {
+    const deletedPost = await this.postService.remove(+id);
+
+    if (deletedPost.affected === 0) {
+      throw new HttpException("Статья не найдена!", HttpStatus.NOT_FOUND);
+    }
+
+    return deletedPost;
   }
 }
