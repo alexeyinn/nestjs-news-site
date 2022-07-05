@@ -75,8 +75,15 @@ export class PostService {
     return { items, total };
   }
 
-  findOne(id: number) {
-    return this.postRepository.findOne({ where: { id } });
+  async findOne(id: number) {
+    const post = await this.postRepository.findOne({ where: { id } });
+
+    if (post) {
+      post.views++;
+      await this.postRepository.save(post);
+    }
+
+    return post;
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {
