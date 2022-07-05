@@ -17,15 +17,28 @@ export class PostService {
   }
 
   findAll() {
-    return this.postRepository.find();
-  }
-
-  popular() {
     return this.postRepository.find({
       order: {
-        views: "DESC",
+        createdAt: "DESC",
       },
     });
+  }
+
+  async popular() {
+    // return await this.postRepository.find({
+    //   order: {
+    //     views: "DESC",
+    //   },
+    // });
+
+    const qb = this.postRepository.createQueryBuilder("p");
+
+    qb.orderBy("views", "DESC");
+    qb.limit(10);
+
+    const [items, total] = await qb.getManyAndCount();
+
+    return { items, total };
   }
 
   findOne(id: number) {
