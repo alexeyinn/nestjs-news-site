@@ -27,6 +27,11 @@ export class PostController {
     return this.postService.findAll();
   }
 
+  @Get("popular")
+  sortByPopular() {
+    return this.postService.popular();
+  }
+
   @Get(":id")
   async findOne(@Param("id") id: string) {
     const post = await this.postService.findOne(+id);

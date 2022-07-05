@@ -20,6 +20,14 @@ export class PostService {
     return this.postRepository.find();
   }
 
+  popular() {
+    return this.postRepository.find({
+      order: {
+        views: "DESC",
+      },
+    });
+  }
+
   findOne(id: number) {
     return this.postRepository.findOne({ where: { id } });
   }
