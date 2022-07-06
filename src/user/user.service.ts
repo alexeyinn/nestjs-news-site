@@ -26,7 +26,9 @@ export class UserService {
   }
 
   findByCond(cond: any) {
-    return this.userRepository.findOne(cond);
+    return this.userRepository.findOne({
+      where: { email: cond.email, password: cond.password },
+    });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
