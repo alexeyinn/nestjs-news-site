@@ -25,7 +25,7 @@ export class UserService {
     return `This action returns a #${id} user`;
   }
 
-  findByCond(cond: any) {
+  findByCond(cond) {
     return this.userRepository.findOne({
       where: { email: cond.email, password: cond.password },
     });
