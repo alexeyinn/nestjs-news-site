@@ -1,4 +1,9 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from "src/user/dto/create-user.dto";
 import { UserEntity } from "src/user/entities/user.entity";
@@ -44,7 +49,14 @@ export class AuthService {
         access_token: this.jwtService.sign(user),
       };
     } catch (err) {
-      throw new ForbiddenException(err);
+      if (err.driverError.detail.slice(-15) === "уже существует.") {
+        throw new HttpException(
+          "Пользователь с такой почтой, уже существует!",
+          HttpStatus.BAD_GATEWAY
+        );
+      } else {
+        throw new ForbiddenException(err);
+      }
     }
   }
 }
