@@ -11,6 +11,6 @@ export class CreateUserDto {
   })
   email: string;
 
-  @Length(6, 12, { message: "Пароль должен содержать от 3 до 32 символов!" })
+  @Length(6, 12, { message: "Пароль должен содержать от 6 до 32 символов!" })
   password?: string;
 }
