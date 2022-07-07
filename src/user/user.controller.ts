@@ -4,17 +4,15 @@ import {
   Post,
   Body,
   Patch,
-  Param,
-  Delete,
   Request,
   UseGuards,
+  Query,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { AuthGuard } from "@nestjs/passport";
-import { LocalAuthGuard } from "src/auth/guards/local-auth.guard";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
+import { SearchUserDto } from "./dto/search-user.dto";
 
 @Controller("user")
 export class UserController {
@@ -30,19 +28,14 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.userService.findOne(+id);
+  @Get("search")
+  search(@Query() dto: SearchUserDto) {
+    return this.userService.search(dto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch("me")
   update(@Request() req, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+req.user.id, updateUserDto);
-  }
-
-  @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.userService.remove(+id);
   }
 }
